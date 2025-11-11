@@ -132,7 +132,6 @@ export default class AddStoryPage {
 
 let imageBlob = null;
 
-// Konversi File → Blob agar bisa disimpan di IndexedDB
 if (photo && photo instanceof File) {
   const buffer = await photo.arrayBuffer();
   imageBlob = new Blob([buffer], { type: photo.type });
@@ -147,7 +146,6 @@ const storyData = {
 };
 
   if (navigator.onLine) {
-    // 🟢 ONLINE → kirim langsung ke server
     try {
       messageEl.textContent = "Loading: Mengirim data...";
       const result = await postData(description, photo, this.#lat, this.#lon);
@@ -171,7 +169,6 @@ const storyData = {
       messageEl.textContent = "Gagal menambahkan story. Coba lagi.";
     }
   } else {
-    // 🔴 OFFLINE → simpan ke IndexedDB
     await IdbHelper.addPendingStory(storyData);
     messageEl.textContent =
           "📦 Anda sedang offline. Story disimpan sementara dan akan dikirim otomatis saat online.";

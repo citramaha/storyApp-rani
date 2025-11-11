@@ -70,7 +70,6 @@ export async function postData(description, photo, lat, lon) {
     formData.append("description", description);
     formData.append("photo", photo);
 
-    // lat/lon opsional tapi harus dikirim sebagai string jika ada
     if (lat && lon) {
       formData.append("lat", lat.toString());
       formData.append("lon", lon.toString());

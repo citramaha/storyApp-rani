@@ -45,7 +45,6 @@ window.addEventListener('online', async () => {
   const pendingStories = await IdbHelper.getAllPendingStories();
 
   for (const story of pendingStories) {
-  // buat kembali File dari Blob sebelum upload
   const photoFile = new File([story.image], "photo.jpg", { type: story.image.type || "image/jpeg" });
 
   const result = await postStory(story.description, photoFile, story.lat, story.lon);
@@ -56,7 +55,6 @@ window.addEventListener('online', async () => {
     console.error("❌ Gagal sinkron:", result.message);
   }
 }
-  // Hapus semua data pending setelah dikirim
   await IdbHelper.clearPendingStories();
 });
 

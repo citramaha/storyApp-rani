@@ -3,7 +3,7 @@ import { openDB } from 'idb';
 const DATABASE_NAME = 'stories-database';
 const DATABASE_VERSION = 1;
 const STORE_NAME = 'stories';
-const PENDING_STORE = 'pending-stories'; // untuk data offline
+const PENDING_STORE = 'pending-stories'; 
 
 const dbPromise = openDB(DATABASE_NAME, DATABASE_VERSION, {
   upgrade(database) {
@@ -30,7 +30,6 @@ const IdbHelper = {
     return (await dbPromise).clear(STORE_NAME);
   },
 
-  // --- Untuk mode offline ---
   async addPendingStory(story) {
     return (await dbPromise).put(PENDING_STORE, story);
   },
