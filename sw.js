@@ -38,7 +38,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const requestUrl = new URL(event.request.url);
 
-  // Jika request ke API Dicoding
+
   if (requestUrl.origin.includes("story-api.dicoding.dev")) {
     event.respondWith(
       caches.open(DYNAMIC_CACHE).then(async (cache) => {
@@ -72,7 +72,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Untuk file statis
+ 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       return (
