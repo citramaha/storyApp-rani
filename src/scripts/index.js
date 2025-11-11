@@ -2,6 +2,13 @@ import "../styles/styles.css";
 import App from "./pages/app";
 import IdbHelper from './data/idb.js';
 import { postStory } from './data/api.js';
+import syncPendingStories from "./sync-handler.js";
+
+window.addEventListener('online', async () => {
+  console.log('KONEKSI: online — melakukan sinkronisasi pending...');
+  await syncPendingStories();
+});
+
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

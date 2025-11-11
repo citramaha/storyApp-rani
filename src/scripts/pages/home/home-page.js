@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import { getData } from "../../data/api.js";
 import PushHelper from "../../utils/push-helper";
 import IdbHelper from "../../data/idb.js";
+import BookmarkIdb from "../../data/bookmark-idb.js";
 
 export default class HomePage {
   async render() {
@@ -113,6 +114,11 @@ try {
           <h3>${name}</h3>
           <p>${description}</p>
           ${lat && lon ? `<small>Koordinat: ${lat.toFixed(2)}, ${lon.toFixed(2)}</small>` : ""}
+          <div class="story-actions" style="margin-top:8px;">
+            <button class="favorite-btn" data-id="${story.id}" aria-label="Favorit">
+              ⭐ <span class="fav-text">Bookmark</span>
+            </button>
+          </div>
         </div>
       `;
 
@@ -130,6 +136,44 @@ try {
           storyCard.classList.add("active");
         });
       }
+
+      // cek status bookmark dan inisialisasi tombol
+      const favBtn = storyCard.querySelector(".favorite-btn");
+      const favText = storyCard.querySelector(".fav-text");
+
+      // Async: cek apakah sudah favorit
+      ( async () => {
+        try {
+          const isFav = await BookmarkIdb.isBookmarked(story.id);
+          if (isFav) favText.textContent = "Favorit";
+          else favText.textContent = "Bookmark";
+        } catch (err) {
+          console.error("Error mengecek bookmark:", err);
+        }
+      })();
+
+      // Toggle favorit saat klik
+      favBtn.addEventListener("click", async (e) => {
+        e.stopPropagation(); // supaya tidak trigger klik card (peta)
+        try {
+          const isFavNow = await BookmarkIdb.isBookmarked(story.id);
+          if (isFavNow) {
+            await BookmarkIdb.remove(story.id);
+            favText.textContent = "Bookmark";
+            // optional: beri feedback kecil
+            alert("Hapus dari favorit");
+          } else {
+            // simpan seluruh objek story supaya halaman Bookmark dapat menampilkan foto/desc
+            await BookmarkIdb.add(story);
+            favText.textContent = "Favorit";
+            alert("Ditambahkan ke favorit");
+          }
+        } catch (err) {
+          console.error("Gagal toggle favorite:", err);
+          alert("Terjadi kesalahan saat mengubah favorit.");
+        }
+      });
+
 
       storiesContainer.appendChild(storyCard);
     });
