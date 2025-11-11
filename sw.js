@@ -1,14 +1,18 @@
 /* eslint-disable no-restricted-globals */
 
+const BASE = self.location.pathname.includes('/storyApp-rani/')
+  ? '/storyApp-rani/'
+  : '/';
+
 const STATIC_CACHE = "storyapp-static-v2";
 const DYNAMIC_CACHE = "storyapp-dynamic-v1";
+
 const STATIC_ASSETS = [
-  "/",
-  "/index.html",
-  "/styles/styles.css",
-  "/scripts/index.js",
-  "/images/icons/icon-96x96.png",
-  "/images/icons/icon-192x192.png",
+  BASE,
+  BASE + "index.html",
+  BASE + "scripts/index.js",
+  BASE + "images/icons/icon-96x96.png",
+  BASE + "images/icons/icon-192x192.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -73,7 +77,7 @@ self.addEventListener("fetch", (event) => {
     caches.match(event.request).then((cachedResponse) => {
       return (
         cachedResponse ||
-        fetch(event.request).catch(() => caches.match("/index.html"))
+        fetch(event.request).catch(() => caches.match(BASE +"/index.html"))
       );
     })
   );
@@ -91,10 +95,10 @@ self.addEventListener("push", (event) => {
   const title = data.title || "Story Baru dari Story App!";
   const options = data.options || {
     body: "Ada story baru!",
-    icon: "/images/icons/icon-192x192.png",
-    badge: "/images/icons/icon-96x96.png",
+    icon: BASE + "/images/icons/icon-192x192.png",
+    badge: BASE + "/images/icons/icon-96x96.png",
     data: {
-      url: "/" 
+      url: BASE  
     },
     actions: [
       { action: "open", title: "Lihat Story" },
