@@ -53,7 +53,6 @@ let data;
 try {
   data = await getData();
   if (data.listStory && data.listStory.length > 0) {
-    // Simpan ke IndexedDB
     await IdbHelper.clearStories();
     for (const story of data.listStory) {
       await IdbHelper.addStory(story);
@@ -137,11 +136,9 @@ try {
         });
       }
 
-      // cek status bookmark dan inisialisasi tombol
       const favBtn = storyCard.querySelector(".favorite-btn");
       const favText = storyCard.querySelector(".fav-text");
 
-      // Async: cek apakah sudah favorit
       ( async () => {
         try {
           const isFav = await BookmarkIdb.isBookmarked(story.id);
@@ -152,18 +149,15 @@ try {
         }
       })();
 
-      // Toggle favorit saat klik
       favBtn.addEventListener("click", async (e) => {
-        e.stopPropagation(); // supaya tidak trigger klik card (peta)
+        e.stopPropagation(); 
         try {
           const isFavNow = await BookmarkIdb.isBookmarked(story.id);
           if (isFavNow) {
             await BookmarkIdb.remove(story.id);
             favText.textContent = "Bookmark";
-            // optional: beri feedback kecil
             alert("Hapus dari favorit");
           } else {
-            // simpan seluruh objek story supaya halaman Bookmark dapat menampilkan foto/desc
             await BookmarkIdb.add(story);
             favText.textContent = "Favorit";
             alert("Ditambahkan ke favorit");
